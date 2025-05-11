@@ -141,9 +141,4 @@ git commit -m "Add your message here"
 Push to your branch:
 git push origin feature/your-feature-name
 Open a pull request on GitHub.
-License
-This project is licensed under the MIT License. See the LICENSE file for details.
 
-Let me know if you need further adjustments or additional sections!
-
-ReactPaginate
