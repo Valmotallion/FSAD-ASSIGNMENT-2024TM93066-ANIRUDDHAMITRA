@@ -30,7 +30,7 @@ const ReportsPage = () => {
 
   const filteredReports = filter
     ? reports.filter((r) =>
-        r.vaccineName.toLowerCase().includes(filter.toLowerCase())
+        r?.vaccineName?.toLowerCase().includes(filter.toLowerCase())
       )
     : reports;
 
