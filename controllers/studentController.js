@@ -55,7 +55,21 @@ exports.updateStudent = async (req, res) => {
     }
   };
   
-
+  // exports.bulkCreateStudents = async (req, res) => {
+  //   try {
+  //     const students = req.body;
+  
+  //     if (!Array.isArray(students) || students.length === 0) {
+  //       return res.status(400).json({ error: 'Invalid student list' });
+  //     }
+  
+  //     const inserted = await Student.insertMany(students);
+  //     res.status(201).json({ message: 'Students added', students: inserted });
+  //   } catch (err) {
+  //     res.status(500).json({ error: err.message });
+  //   }
+  // };
+  
 
 // exports.vaccinateStudent = async (req, res) => {
 //   try {
@@ -136,5 +150,19 @@ exports.vaccinateStudent = async (req, res) => {
   } catch (err) {
     console.error("Vaccination error:", err);
     res.status(500).json({ error: 'Internal server error' });
+  }
+};
+exports.bulkCreateStudents = async (req, res) => {
+  try {
+    const students = req.body;
+    console.log('Incoming bulk students:', students);
+    if (!Array.isArray(students) || students.length === 0) {
+      return res.status(400).json({ error: 'Invalid student list' });
+    }
+
+    const inserted = await Student.insertMany(students);
+    res.status(201).json({ message: 'Students added', students: inserted });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };

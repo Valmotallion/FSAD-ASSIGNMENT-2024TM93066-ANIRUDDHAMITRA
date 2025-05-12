@@ -162,4 +162,41 @@ router.delete('/:id', studentController.deleteStudent);
  */
 router.post('/:id/vaccinate', studentController.vaccinateStudent);
 
+/**
+ * @swagger
+ * /api/students/bulk:
+ *   post:
+ *     summary: Bulk add students via CSV upload
+ *     tags: [Students]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: object
+ *               required:
+ *                 - name
+ *                 - className
+ *               properties:
+ *                 name:
+ *                   type: string
+ *                   example: Alice
+ *                 className:
+ *                   type: string
+ *                   example: Grade 5
+ *     responses:
+ *       201:
+ *         description: Students added successfully
+ *       400:
+ *         description: Invalid student list
+ *       500:
+ *         description: Server error
+ */
+
+router.post('/bulk', studentController.bulkCreateStudents);
+
 module.exports = router;
