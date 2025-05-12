@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Layout from "../components/Layout";
 import StudentForm from "../components/StudentForm";
+import Papa from "papaparse"; // at top
 
 const StudentsPage = () => {
   const [students, setStudents] = useState([]);
@@ -9,6 +10,7 @@ const StudentsPage = () => {
   const [selectedDrive, setSelectedDrive] = useState("");
   const [editingStudentId, setEditingStudentId] = useState(null);
   const [editedStudent, setEditedStudent] = useState({ name: "", className: "" });
+  const [csvFile, setCsvFile] = useState(null);
 
   // Fetch drives
   useEffect(() => {
@@ -110,6 +112,33 @@ const StudentsPage = () => {
     }
   };
   
+  const handleCsvUpload = () => {
+    if (!csvFile) return;
+  
+    Papa.parse(csvFile, {
+      header: true,
+      skipEmptyLines: true,
+      complete: async (results) => {
+        const token = localStorage.getItem("token");
+
+        try {
+          const res = await axios.post(
+            "http://localhost:3000/api/students/bulk",
+            results.data,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+  
+          console.log("Bulk upload success:", res.data);
+          fetchStudents(selectedDrive); // refresh table
+        } catch (error) {
+          console.error("Bulk upload failed:", error.response?.data || error.message);
+        }
+      },
+    });
+  };
+  
 
   return (
     <Layout>
@@ -138,7 +167,23 @@ const StudentsPage = () => {
           <StudentForm onAdd={handleAddStudent} />
         </div>
       )}
-
+      {/* CSV Upload */}
+      {/* Upload CSV */}
+      <div className="mb-6 text-center">
+         <input
+           type="file"
+           accept=".csv"
+           onChange={(e) => setCsvFile(e.target.files[0])}
+           className="mb-2"
+           />
+       <button
+         onClick={handleCsvUpload}
+         className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+       >
+         Upload CSV
+       </button>
+</div>
+      {/* Vaccination Status */}
       {/* Students Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full border-collapse border border-gray-300">
